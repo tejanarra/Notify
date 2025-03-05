@@ -1,0 +1,44 @@
+{
+  "rules": {
+    "notes": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$noteId": {
+        ".read": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)",
+        ".write": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)",
+
+        "content": {
+          ".read": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)",
+          ".write": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)"
+        },
+
+        "chat": {
+          ".read": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)",
+          ".write": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)"
+        },
+
+        "members": {
+          ".read": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)",
+          ".write": "auth != null && root.child('notes').child($noteId).child('owner').val() == auth.uid"
+        },
+
+        "presence": {
+          ".read": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)",
+          ".write": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)"
+        },
+
+        "title": {
+          ".read": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)",
+          ".write": "auth != null && root.child('notes').child($noteId).child('members').hasChild(auth.uid)"
+        }
+      }
+    },
+    "users": {
+      ".read": "auth != null",
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    }
+  }
+}
