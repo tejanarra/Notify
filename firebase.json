@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "public",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -14,16 +14,6 @@
     ]
   },
   "database": {
-    "rules": "database.rules.json",
-    "indexes": {
-      "notes": {
-        "members": [
-          "uid"
-        ],
-        "owner": [
-          "uid"
-        ]
-      }
-    }
+    "rules": "database.rules.json"
   }
 }

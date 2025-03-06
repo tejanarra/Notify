@@ -134,27 +134,31 @@ export default function HomePage() {
   if (!authChecked) return <div className="text-center p-4">Verifying authentication...</div>;
   if (loading) return <Loader />;
 
+  
   return (
-    <div className="max-w-7xl mx-auto p-4 min-h-screen">
-      <CreateNoteForm 
-        onCreate={handleCreateNote} 
-        error={error}
-        setError={setError}
-      />
+    <div className="bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
+        <CreateNoteForm onCreate={handleCreateNote} error={error} setError={setError} />
 
-      {notes.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {notes.map((note) => (
-            <NoteCard
-              key={note.id}
-              note={note}
-              onDelete={handleDeleteNote}
-            />
-          ))}
-        </div>
-      )}
+        {loading ? (
+          <div className="mt-12 flex justify-center">
+            <Loader />
+          </div>
+        ) : notes.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+            {notes.map((note) => (
+              <NoteCard
+                key={note.id}
+                note={note}
+                onDelete={handleDeleteNote}
+                className="hover:transform hover:-translate-y-1 transition-all duration-200"
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
