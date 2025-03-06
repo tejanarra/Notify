@@ -30,7 +30,7 @@ export default function SignupPage() {
         });
       }
 
-      navigate("/");
+      navigate("/notes");
     } catch (err) {
       setError(err.message);
     }
@@ -53,7 +53,7 @@ export default function SignupPage() {
         collaborating: {},
       });
 
-      navigate("/");
+      navigate("/notes");
     } catch (err) {
       setError(err.message);
     }

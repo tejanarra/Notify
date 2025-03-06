@@ -1,17 +1,22 @@
-// NoteChat.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { ref, push, onValue } from "firebase/database";
+import { ref, push, onValue, update, child, get } from "firebase/database";
 import { database, auth } from "../firebase";
-import { FiSend, FiMaximize, FiMinimize } from "react-icons/fi";
+import { IoSend, IoExpand, IoContract } from "react-icons/io5";
+import { FiMessageCircle, FiCheck, FiCheckCircle, FiClock } from "react-icons/fi";
 
 export default function NoteChat({ noteId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [fullscreen, setFullscreen] = useState(false);
+  const [fullScreen, setFullScreen] = useState(false);
+  const [collaborators, setCollaborators] = useState({});
+  const chatRef = ref(database, `notes/${noteId}/chat`);
+  const membersRef = ref(database, `notes/${noteId}/members`);
+  const messagesRef = useRef({});
   const endOfMessagesRef = useRef(null);
+  const inputRef = useRef(null);
 
+  // Fetch messages
   useEffect(() => {
-    const chatRef = ref(database, `notes/${noteId}/chat`);
     const unsubscribe = onValue(chatRef, (snapshot) => {
       const data = snapshot.val() || {};
       const messagesArray = Object.entries(data).map(([key, value]) => ({
@@ -19,83 +24,220 @@ export default function NoteChat({ noteId }) {
         id: key,
       }));
       setMessages(messagesArray.sort((a, b) => a.timestamp - b.timestamp));
+      messagesRef.current = data;
     });
+
     return () => unsubscribe();
   }, [noteId]);
 
+  // Fetch collaborators for proper read receipt display
   useEffect(() => {
-    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+    const unsubscribe = onValue(membersRef, (snapshot) => {
+      setCollaborators(snapshot.val() || {});
+    });
+    
+    return () => unsubscribe();
+  }, [noteId]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
-  const sendMessage = async (text) => {
-    if (!text.trim()) return;
-    
+  const sendMessage = async (text, imageUrl = "") => {
+    if (!text.trim() && !imageUrl) return;
+
     const messageData = {
       text,
+      imageUrl,
       sender: auth.currentUser.uid,
       senderEmail: auth.currentUser.email,
       timestamp: Date.now(),
       readBy: { [auth.currentUser.uid]: true },
     };
 
-    push(ref(database, `notes/${noteId}/chat`), messageData);
+    push(chatRef, messageData);
     setNewMessage("");
+    
+    // Focus back on input after sending
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
+  const markMessagesAsRead = () => {
+    const currentUserUid = auth.currentUser.uid;
+    messages.forEach((msg) => {
+      if (!msg.readBy || !msg.readBy[currentUserUid]) {
+        const messageRef = child(chatRef, msg.id);
+        update(messageRef, {
+          [`readBy/${currentUserUid}`]: true,
+        });
+      }
+    });
   };
 
   const formatTimestamp = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
+  // Group messages by date
+  const groupMessagesByDate = () => {
+    const grouped = {};
+    
+    messages.forEach(msg => {
+      const date = new Date(msg.timestamp);
+      const dateStr = date.toLocaleDateString();
+      
+      if (!grouped[dateStr]) {
+        grouped[dateStr] = [];
+      }
+      
+      grouped[dateStr].push(msg);
+    });
+    
+    return grouped;
+  };
+
+  // Check if a message has been read by someone other than the sender
+  const isReadByOthers = (msg) => {
+    if (!msg.readBy) return false;
+    
+    // Get all readers except the sender
+    const readers = Object.keys(msg.readBy).filter(uid => uid !== msg.sender);
+    return readers.length > 0;
+  };
+
+  const groupedMessages = groupMessagesByDate();
+  const isCurrentUser = (senderId) => senderId === auth.currentUser?.uid;
+
   return (
-    <div className={`flex flex-col bg-white rounded-xl shadow-sm border ${fullscreen ? "fixed inset-0 z-50" : "h-full"}`}>
-      <div className="flex justify-between items-center p-4 border-b">
-        <h3 className="font-semibold text-lg">Chat</h3>
+    <div
+      className={`flex flex-col h-full ${
+        fullScreen 
+          ? "fixed inset-0 z-50 bg-white" 
+          : "border rounded-2xl w-full overflow-hidden"
+      }`}
+    >
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 flex justify-between items-center shadow-sm">
+        <div className="flex items-center gap-2">
+          <FiMessageCircle className="text-white text-xl" />
+          <h3 className="font-bold text-lg text-white">Collaborative Chat</h3>
+        </div>
         <button
-          onClick={() => setFullscreen(!fullscreen)}
-          className="p-2 hover:bg-gray-100 rounded-lg"
+          onClick={() => setFullScreen(!fullScreen)}
+          className="text-white hover:bg-white/20 rounded-full p-2 transition-colors"
+          aria-label={fullScreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
-          {fullscreen ? <FiMinimize size={20} /> : <FiMaximize size={20} />}
+          {fullScreen ? <IoContract size={18} /> : <IoExpand size={18} />}
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex flex-col ${msg.sender === auth.currentUser.uid ? "items-end" : "items-start"}`}
-          >
-            <div className={`max-w-[80%] p-3 rounded-xl ${
-              msg.sender === auth.currentUser.uid 
-                ? "bg-blue-500 text-white" 
-                : "bg-gray-100"
-            }`}>
-              <div className="text-sm font-medium mb-1">
-                {msg.sender === auth.currentUser.uid ? "You" : msg.senderEmail}
-              </div>
-              <p className="text-sm">{msg.text}</p>
-              <div className="flex items-center justify-end gap-2 mt-2 text-xs opacity-75">
-                <span>{formatTimestamp(msg.timestamp)}</span>
+      <div 
+        className="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50"
+        style={{
+          height: fullScreen ? "calc(100vh - 120px)" : "auto",
+        }}
+        onClick={markMessagesAsRead}
+        onFocus={markMessagesAsRead}
+      >
+        {Object.entries(groupedMessages).map(([date, msgs]) => (
+          <div key={date} className="space-y-3">
+            <div className="flex justify-center">
+              <div className="px-3 py-1 bg-gray-200 rounded-full text-xs text-gray-600 inline-block">
+                {date === new Date().toLocaleDateString() ? "Today" : date}
               </div>
             </div>
+            
+            {msgs.map((msg, index) => {
+              const isSender = isCurrentUser(msg.sender);
+              const showAvatar = index === 0 || msgs[index - 1]?.sender !== msg.sender;
+              const hasBeenReadByOthers = isReadByOthers(msg);
+              
+              return (
+                <div
+                  key={msg.id}
+                  className={`flex ${isSender ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`relative max-w-[75%] ${
+                      isSender 
+                        ? "bg-indigo-500 text-white rounded-t-xl rounded-bl-xl" 
+                        : "bg-white border border-gray-200 rounded-t-xl rounded-br-xl shadow-sm"
+                    } px-4 py-3`}
+                  >
+                    {!isSender && showAvatar && (
+                      <div className="font-medium text-xs mb-1 text-indigo-600">
+                        {msg.senderEmail.split('@')[0]}
+                      </div>
+                    )}
+                    
+                    {msg.imageUrl && (
+                      <img
+                        src={msg.imageUrl}
+                        alt="attachment"
+                        className="rounded-lg mb-2 max-w-full"
+                      />
+                    )}
+                    
+                    <div className={isSender ? "text-white" : "text-gray-800"}>
+                      {msg.text}
+                    </div>
+                    
+                    <div className={`text-xs mt-1 flex items-center justify-end gap-1 ${
+                      isSender ? "text-indigo-100" : "text-gray-400"
+                    }`}>
+                      <span>{formatTimestamp(msg.timestamp)}</span>
+                      {isSender && (
+                        hasBeenReadByOthers 
+                          ? <FiCheckCircle className="text-green-400" /> 
+                          : <FiCheck />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         ))}
+        
+        {messages.length === 0 && (
+          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-gray-500">
+            <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+              <FiMessageCircle className="text-indigo-500 text-2xl" />
+            </div>
+            <h4 className="font-medium text-gray-700 mb-1">No messages yet</h4>
+            <p className="text-sm">Start the conversation by sending a message.</p>
+          </div>
+        )}
+        
         <div ref={endOfMessagesRef} />
       </div>
 
-      <div className="p-4 border-t">
-        <div className="flex gap-2">
+      <div className="p-3 border-t bg-white">
+        <div className="flex items-center gap-2">
           <input
+            ref={inputRef}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && sendMessage(newMessage)}
+            onFocus={markMessagesAsRead}
+            className="flex-1 border border-gray-200 rounded-full px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
             placeholder="Type a message..."
-            className="flex-1 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={() => sendMessage(newMessage)}
-            className="p-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
+            disabled={!newMessage.trim()}
+            className={`p-2.5 rounded-full shadow-sm ${
+              newMessage.trim() 
+                ? "bg-indigo-600 text-white hover:bg-indigo-700" 
+                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+            } transition-colors duration-200`}
           >
-            <FiSend size={20} />
+            <IoSend />
           </button>
         </div>
       </div>

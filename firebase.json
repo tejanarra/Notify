@@ -1,6 +1,7 @@
 {
   "hosting": {
     "public": "build",
+    "site": "notify-collaborate-2025",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -7,6 +7,7 @@ import NotePage from "./pages/NotePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LandingPage from "./pages/LandingPage";
 
 export default function App() {
   return (
@@ -15,11 +16,11 @@ export default function App() {
         <Navbar />
         <main className="flex-1">
           <Routes>
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-
             <Route
-              path="/"
+              path="/notes"
               element={
                 <ProtectedRoute>
                   <HomePage />

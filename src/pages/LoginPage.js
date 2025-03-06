@@ -15,7 +15,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
+      navigate("/notes");
     } catch (err) {
       setError(err.message);
     }
@@ -27,7 +27,7 @@ export default function LoginPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       // Store the user's data in Firebase (similar to the existing code)
-      navigate("/");
+      navigate("/notes");
     } catch (err) {
       setError(err.message);
     }

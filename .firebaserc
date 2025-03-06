@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "notify-d1060"
-  }
+  },
+  "targets": {
+    "notify-d1060": {
+      "hosting": {
+        "notify-collaborate-2025.web.app": [
+          "notify-d1060"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
