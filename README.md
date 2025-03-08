@@ -5,6 +5,11 @@
   <p align="center">
     <strong>Modern collaborative note-taking for seamless teamwork</strong>
   </p>
+  <p align="center">
+    <a href="https://notify-collaborate-2025.firebaseapp.com/" target="_blank" rel="noopener noreferrer">
+      <img src="https://img.shields.io/badge/Live_Demo-Visit_App-ec4899?style=for-the-badge&logo=firebase" alt="Live Demo" />
+    </a>
+  </p>
 </div>
 
 <p align="center">
@@ -45,10 +50,11 @@
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="/api/placeholder/400/240" alt="Dashboard" />
-  <img src="/api/placeholder/400/240" alt="Note Editor" />
-  <img src="/api/placeholder/400/240" alt="Collaborators" />
-  <img src="/api/placeholder/400/240" alt="Chat" />
+  <img src="/notify-frontend/public/Images/readme-files/Workspace.png" alt="Dashboard" />
+  <img src="/notify-frontend/public/Images/readme-files/Editor.png" alt="Note Editor" />
+  <img src="/notify-frontend/public/Images/readme-files/Editor.png" alt="Collaborators" />
+  <img src="/notify-frontend/public/Images/readme-files/Chat.png" alt="Chat" />
+  <img src="/notify-frontend/public/Images/readme-files/Canvas.png" alt="Canvas" />
 </div>
 
 ## 🚀 Getting Started
@@ -262,6 +268,10 @@ For secure data access, configure your Firebase database rules:
    firebase deploy
    ```
 
+## 📲 Live Demo
+
+Visit our live application at [https://notify-collaborate-2025.firebaseapp.com/](https://notify-collaborate-2025.firebaseapp.com/)
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -288,5 +298,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://github.com/yourusername">Sri Sai Teja Narra</a>
+  <a href="https://notify-collaborate-2025.firebaseapp.com/" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Try_Notify_Today-ec4899?style=for-the-badge&logo=react" alt="Try Notify Today" />
+  </a>
+</p>
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/tejanarra">Sri Sai Teja Narra</a>
 </p>
