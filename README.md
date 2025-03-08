@@ -50,11 +50,11 @@
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="/notify-frontend/public/Images/readme-files/Workspace.png" alt="Dashboard" />
-  <img src="/notify-frontend/public/Images/readme-files/Editor.png" alt="Note Editor" />
-  <img src="/notify-frontend/public/Images/readme-files/Editor.png" alt="Collaborators" />
-  <img src="/notify-frontend/public/Images/readme-files/Chat.png" alt="Chat" />
-  <img src="/notify-frontend/public/Images/readme-files/Canvas.png" alt="Canvas" />
+  <img src="/public/Images/readme-files/Workspace.png" alt="Dashboard" />
+  <img src="/public/Images/readme-files/Editor.png" alt="Collaborators" />
+  <img src="/public/Images/readme-files/Editor.png" alt="Note Editor" />
+  <img src="/public/Images/readme-files/Chat.png" alt="Chat" />
+  <img src="/public/Images/readme-files/Canvas.png" alt="Canvas" />
 </div>
 
 ## 🚀 Getting Started
