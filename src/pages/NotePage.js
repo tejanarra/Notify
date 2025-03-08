@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ref, onValue, set, onDisconnect } from "firebase/database";
 import { database, auth } from "../firebase";
 import NoteEditor from "../components/NoteEditor";
-import Collaborators from "../components/Collaborators";
-import NoteChat from "../components/NoteChat";
+import Collaborators from "../components/Collaborators/Collaborators";
+import NoteChat from "../components/NoteChat/NoteChat";
 import {
   FiArrowLeft,
   FiSave,
@@ -102,19 +102,19 @@ export default function NotePage() {
     switch (activeTab) {
       case "editor":
         return (
-          <div className="h-full rounded-xl shadow overflow-hidden">
+          <div className="h-full pb-10 rounded-xl shadow overflow-hidden">
             <NoteEditor noteId={noteId} />
           </div>
         );
       case "chat":
         return (
-          <div className="h-full flex flex-col bg-white rounded-lg shadow overflow-hidden">
+          <div className="h-full pb-10 flex flex-col bg-white rounded-lg shadow overflow-hidden">
             <NoteChat noteId={noteId} />
           </div>
         );
       case "collaborators":
         return (
-          <div className="h-full flex flex-col bg-white rounded-lg shadow overflow-hidden">
+          <div className="h-full pb-10 flex flex-col bg-white rounded-lg shadow overflow-hidden">
             <div className="flex-1 overflow-auto p-2">
               <Collaborators noteId={noteId} isOwner={isOwner} />
             </div>

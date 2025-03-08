@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, getAuth, sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../firebase"; // Assuming your Firebase configuration is correct
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  getAuth,
+  sendPasswordResetEmail,
+} from "firebase/auth";
+import { auth } from "../firebase";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -24,9 +30,7 @@ export default function LoginPage() {
   const handleGoogleSignup = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      // Store the user's data in Firebase (similar to the existing code)
+      await signInWithPopup(auth, provider);
       navigate("/notes");
     } catch (err) {
       setError(err.message);
@@ -34,12 +38,12 @@ export default function LoginPage() {
   };
 
   const handleForgotPassword = async () => {
-    const authInstance = getAuth(); // Get the Auth instance
+    const authInstance = getAuth();
     try {
       await sendPasswordResetEmail(authInstance, emailForPasswordReset);
       setError("");
       alert("Password reset email sent! Please check your inbox.");
-      setIsForgotPassword(false); // Close the reset password prompt
+      setIsForgotPassword(false);
     } catch (err) {
       setError("Error: " + err.message);
     }
@@ -97,7 +101,9 @@ export default function LoginPage() {
 
             <div className="my-6 flex items-center">
               <div className="flex-1 border-t border-gray-200"></div>
-              <span className="px-4 text-gray-500 text-sm">Or continue with</span>
+              <span className="px-4 text-gray-500 text-sm">
+                Or continue with
+              </span>
               <div className="flex-1 border-t border-gray-200"></div>
             </div>
 

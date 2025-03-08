@@ -14,6 +14,27 @@ export default function HomePage() {
   const unsubscribeDb = useRef(null);
 
   useEffect(() => {
+    const handleAuthChange = (user) => {
+      setAuthChecked(true);
+      if (!user) return handleUnauthenticated();
+      setupNotesSubscription(user);
+    };
+    const setupNotesSubscription = (user) => {
+      try {
+        const notesRef = ref(database, "notes");
+        unsubscribeDb.current = onValue(
+          notesRef,
+          (snapshot) => handleSnapshot(snapshot, user),
+          handleError
+        );
+      } catch (error) {
+        handleConnectionError(error);
+      }
+    };
+    const handleSnapshot = (snapshot, user) => {
+      if (!snapshot.exists()) return handleEmptyNotes();
+      processNotesData(snapshot.val(), user);
+    };
     const authUnsubscribe = auth.onAuthStateChanged(handleAuthChange);
     return () => {
       authUnsubscribe();
@@ -28,38 +49,16 @@ export default function HomePage() {
     setLoading(false);
   };
 
-  const handleAuthChange = (user) => {
-    setAuthChecked(true);
-    if (!user) return handleUnauthenticated();
-    setupNotesSubscription(user);
-  };
-
   const handleUnauthenticated = () => {
     setNotes([]);
     setLoading(false);
   };
 
-  const setupNotesSubscription = (user) => {
-    try {
-      const notesRef = ref(database, "notes");
-      unsubscribeDb.current = onValue(
-        notesRef,
-        (snapshot) => handleSnapshot(snapshot, user),
-        handleError
-      );
-    } catch (error) {
-      handleConnectionError(error);
-    }
-  };
-
-  const handleSnapshot = (snapshot, user) => {
-    if (!snapshot.exists()) return handleEmptyNotes();
-    processNotesData(snapshot.val(), user);
-  };
-
   const processNotesData = (data, user) => {
     const userNotes = Object.entries(data)
-      .filter(([_, note]) => note.owner === user.uid || note.members?.[user.uid])
+      .filter(
+        ([_, note]) => note.owner === user.uid || note.members?.[user.uid]
+      )
       .map(([id, note]) => ({
         id,
         ...note,
@@ -89,7 +88,7 @@ export default function HomePage() {
     try {
       const user = auth.currentUser;
       const newNoteRef = push(ref(database, "notes"));
-      
+
       await set(newNoteRef, {
         title,
         owner: user.uid,
@@ -131,14 +130,18 @@ export default function HomePage() {
     }
   };
 
-  if (!authChecked) return <div className="text-center p-4">Verifying authentication...</div>;
+  if (!authChecked)
+    return <div className="text-center p-4">Verifying authentication...</div>;
   if (loading) return <Loader />;
 
-  
   return (
     <div className="bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-        <CreateNoteForm onCreate={handleCreateNote} error={error} setError={setError} />
+        <CreateNoteForm
+          onCreate={handleCreateNote}
+          error={error}
+          setError={setError}
+        />
 
         {loading ? (
           <div className="mt-12 flex justify-center">
