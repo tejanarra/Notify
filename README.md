@@ -1,7 +1,7 @@
 # 🌟 Notify
 
 <div align="center">
-  <img src="/public/images/Notify Logos/logo.png" alt="Notify Banner" />
+  <img src="/public/Images/Notify Logos/logo.png" alt="Notify Banner" />
   <p align="center">
     <strong>Modern collaborative note-taking for seamless teamwork</strong>
   </p>
@@ -50,11 +50,11 @@
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="/public/images/readme-files/Workspace.png" alt="Dashboard" />
-  <img src="/public/images/readme-files/Editor.png" alt="Collaborators" />
-  <img src="/public/images/readme-files/Editor.png" alt="Note Editor" />
-  <img src="/public/images/readme-files/Chat.png" alt="Chat" />
-  <img src="/public/images/readme-files/Canvas.png" alt="Canvas" />
+  <img src="/public/Images/readme-files/Workspace.png" alt="Dashboard" />
+  <img src="/public/Images/readme-files/Editor.png" alt="Collaborators" />
+  <img src="/public/Images/readme-files/Editor.png" alt="Note Editor" />
+  <img src="/public/Images/readme-files/Chat.png" alt="Chat" />
+  <img src="/public/Images/readme-files/Canvas.png" alt="Canvas" />
 </div>
 
 ## 🚀 Getting Started
