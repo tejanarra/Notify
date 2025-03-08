@@ -50,14 +50,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="h-full mt-5 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 max-h-[calc(100vh-8rem)] overflow-y-auto">
+    <div className="h-full bg-black text-white flex items-center justify-center p-4">
+      <div className="absolute inset-0 opacity-30 z-0">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ec4899' fill-opacity='0.10'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
+          }}
+        ></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-fuchsia-600/10"></div>
+      </div>
+      
+      <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-8 max-h-[calc(100vh-8rem)] overflow-y-auto relative z-10 border border-pink-500/30">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-semibold text-gray-800">Welcome Back</h2>
+          <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600">
+            Notify
+          </h2>
+          <h3 className="text-2xl font-semibold text-white mt-4">Welcome Back</h3>
         </div>
 
         {error && (
-          <div className="mb-6 p-3 bg-red-100 text-red-700 rounded-lg">
+          <div className="mb-6 p-3 bg-pink-500/20 text-pink-300 rounded-lg border border-pink-500/30">
             {error}
           </div>
         )}
@@ -66,50 +80,50 @@ export default function LoginPage() {
           <>
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Email Address
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/30 transition-all"
                   placeholder="name@example.com"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Password
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/30 transition-all"
                   placeholder="••••••••"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-sm"
+                className="w-full bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-600 hover:to-fuchsia-700 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40"
               >
                 Sign In
               </button>
             </form>
 
             <div className="my-6 flex items-center">
-              <div className="flex-1 border-t border-gray-200"></div>
-              <span className="px-4 text-gray-500 text-sm">
+              <div className="flex-1 border-t border-gray-700"></div>
+              <span className="px-4 text-gray-400 text-sm">
                 Or continue with
               </span>
-              <div className="flex-1 border-t border-gray-200"></div>
+              <div className="flex-1 border-t border-gray-700"></div>
             </div>
 
             <button
               onClick={handleGoogleSignup}
-              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 py-3 px-4 rounded-lg font-medium transition-colors"
+              className="w-full flex items-center justify-center gap-3 bg-gray-800 border border-gray-700 hover:border-pink-500/50 text-gray-300 py-3 px-4 rounded-lg font-medium transition-all hover:bg-gray-800/80"
             >
               <svg className="w-5 h-5" viewBox="0 0 48 48">
                 <path
@@ -133,20 +147,20 @@ export default function LoginPage() {
               Sign in with Google
             </button>
 
-            <p className="text-center mt-6 text-gray-600">
+            <p className="text-center mt-6 text-gray-400">
               Don't have an account?{" "}
               <Link
                 to="/signup"
-                className="text-blue-600 hover:text-blue-700 font-semibold"
+                className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600 hover:text-pink-400 font-semibold"
               >
                 Sign up
               </Link>
             </p>
 
-            <p className="text-center mt-2 text-gray-600">
+            <p className="text-center mt-2 text-gray-400">
               <button
                 onClick={() => setIsForgotPassword(true)}
-                className="text-blue-600 hover:text-blue-700 font-semibold"
+                className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600 hover:text-pink-400 font-semibold"
               >
                 Forgot password?
               </button>
@@ -154,34 +168,34 @@ export default function LoginPage() {
           </>
         ) : (
           <>
-            <h3 className="text-xl font-semibold text-gray-800 text-center mb-4">
+            <h3 className="text-xl font-semibold text-white text-center mb-4">
               Reset Your Password
             </h3>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Enter your email address to receive a password reset link
               </label>
               <input
                 type="email"
                 value={emailForPasswordReset}
                 onChange={(e) => setEmailForPasswordReset(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+                className="w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/30 transition-all"
                 placeholder="name@example.com"
               />
             </div>
 
             <button
               onClick={handleForgotPassword}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-sm mt-4"
+              className="w-full bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-600 hover:to-fuchsia-700 text-white py-3 px-4 rounded-lg font-medium transition-colors shadow-lg shadow-pink-500/30 hover:shadow-xl hover:shadow-pink-500/40 mt-4"
             >
               Send Password Reset Link
             </button>
 
-            <p className="text-center mt-6 text-gray-600">
+            <p className="text-center mt-6 text-gray-400">
               Remember your password?{" "}
               <button
                 onClick={() => setIsForgotPassword(false)}
-                className="text-blue-600 hover:text-blue-700 font-semibold"
+                className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600 hover:text-pink-400 font-semibold"
               >
                 Back to login
               </button>

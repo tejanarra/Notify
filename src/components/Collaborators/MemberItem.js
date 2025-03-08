@@ -11,21 +11,40 @@ export default function MemberItem({
   onRemove,
 }) {
   const isCurrentUser = userId === auth.currentUser?.uid;
-  const statusColor = isCurrentUser ? "indigo" : isOnline ? "green" : "gray";
+  
+  const statusStyles = {
+    current: {
+      bg: "bg-gradient-to-r from-pink-500/10 to-fuchsia-600/10",
+      border: "border-pink-500/30",
+      avatarBg: "bg-gradient-to-r from-pink-500 to-fuchsia-600",
+      statusColor: "text-pink-400"
+    },
+    online: {
+      bg: "bg-gradient-to-r from-green-500/10 to-green-600/10",
+      border: "border-green-500/30",
+      avatarBg: "bg-gradient-to-r from-green-500 to-green-600",
+      statusColor: "text-green-400"
+    },
+    offline: {
+      bg: "bg-gray-900",
+      border: "border-gray-800",
+      avatarBg: "bg-gray-700",
+      statusColor: "text-gray-400"
+    }
+  };
+  
+  // Determine which style to use
+  const style = isCurrentUser ? statusStyles.current : 
+               isOnline ? statusStyles.online : 
+               statusStyles.offline;
 
   return (
     <div
-      className={`flex items-center justify-between p-4 rounded-xl shadow-sm ${
-        isCurrentUser
-          ? "bg-indigo-50 border border-indigo-100"
-          : isOnline
-          ? "bg-green-50 border border-green-100"
-          : "bg-white border border-gray-100"
-      }`}
+      className={`flex items-center justify-between p-4 rounded-xl shadow-lg ${style.bg} border ${style.border} transition-all duration-300 hover:shadow-xl group`}
     >
       <div className="flex items-center gap-3">
         <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center text-white bg-${statusColor}-500`}
+          className={`w-10 h-10 rounded-full flex items-center justify-center text-white shadow-lg shadow-pink-500/20 ${style.avatarBg}`}
         >
           {getUserInitials(email)}
         </div>
@@ -33,6 +52,7 @@ export default function MemberItem({
           email={email}
           isCurrentUser={isCurrentUser}
           isOnline={isOnline}
+          style={style}
         />
       </div>
       {isOwner && !isCurrentUser && (
@@ -42,25 +62,23 @@ export default function MemberItem({
   );
 }
 
-const MemberInfo = ({ email, isCurrentUser, isOnline }) => (
+const MemberInfo = ({ email, isCurrentUser, isOnline, style }) => (
   <div>
-    <div className="text-sm font-medium flex items-center gap-1">
+    <div className="text-sm font-medium flex items-center gap-1 text-white">
       {email}
       {isCurrentUser && (
-        <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">
+        <span className="text-xs bg-pink-500/20 text-pink-400 px-2 py-0.5 rounded-full border border-pink-500/30">
           You
         </span>
       )}
     </div>
-    <OnlineStatus isOnline={isOnline} />
+    <OnlineStatus isOnline={isOnline} style={style} />
   </div>
 );
 
-const OnlineStatus = ({ isOnline }) => (
+const OnlineStatus = ({ isOnline, style }) => (
   <div
-    className={`text-xs font-medium flex items-center gap-1 ${
-      isOnline ? "text-green-600" : "text-gray-500"
-    }`}
+    className={`text-xs font-medium flex items-center gap-1 ${style.statusColor}`}
   >
     {isOnline ? (
       <>
@@ -79,7 +97,7 @@ const OnlineStatus = ({ isOnline }) => (
 const RemoveButton = ({ email, onClick }) => (
   <button
     onClick={onClick}
-    className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+    className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-full transition-colors"
     aria-label={`Remove ${email}`}
   >
     <IoPersonRemove size={18} />

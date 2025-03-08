@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { Excalidraw } from "@excalidraw/excalidraw";
 import { ref, set, onValue } from "firebase/database";
 import { database } from "../firebase";
@@ -27,7 +33,10 @@ export default function NoteEditor({ noteId }) {
   const [isSaving, setIsSaving] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(Date.now());
 
-  const noteRef = useMemo(() => ref(database, `notes/${noteId}/content/drawing`), [noteId]);
+  const noteRef = useMemo(
+    () => ref(database, `notes/${noteId}/content/drawing`),
+    [noteId]
+  );
   const saveQueue = useRef([]);
   const isMounted = useRef(true);
   const isRemoteUpdate = useRef(false);
@@ -73,7 +82,7 @@ export default function NoteEditor({ noteId }) {
       setRemoteData({
         elements: sanitizeElements(data.elements),
         appState: {
-          viewBackgroundColor: data.appState?.viewBackgroundColor || "#f8fafc",
+          viewBackgroundColor: data.appState?.viewBackgroundColor || "#111111",
           zoom: data.appState?.zoom || { value: 1 },
           scrollX: data.appState?.scrollX || 0,
           scrollY: data.appState?.scrollY || 0,
@@ -99,8 +108,7 @@ export default function NoteEditor({ noteId }) {
 
   const handleManualSave = useCallback(() => {
     if (!excalidrawAPI) return;
-    
-    // Get current elements directly from API
+
     const elements = excalidrawAPI.getSceneElements();
     saveQueue.current = [elements];
     debouncedSave.current.flush();
@@ -118,11 +126,42 @@ export default function NoteEditor({ noteId }) {
     isRemoteUpdate.current = false;
   }, [excalidrawAPI, remoteData]);
 
+  useEffect(() => {
+    const handleEscKey = (e) => {
+      if (e.key === 'Escape' && fullScreen) {
+        setFullScreen(false);
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, [fullScreen]);
+  
+  useEffect(() => {
+    if (fullScreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [fullScreen]);
+
   return (
-    <div className={`relative overflow-hidden rounded-xl border border-gray-200 shadow-lg ${
-      fullScreen ? "fixed inset-0 z-50 bg-white" : "h-full"
-    }`}>
-      <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-r from-indigo-600 to-blue-500 p-3 flex justify-between items-center shadow-md">
+    <div
+      className={fullScreen ? "fixed inset-0 z-50 bg-black" : "h-full"}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: fullScreen ? '0' : '0.75rem',
+        border: !fullScreen ? '1px solid rgba(236, 72, 153, 0.3)' : 'none',
+        boxShadow: !fullScreen ? '0 10px 15px -3px rgba(236, 72, 153, 0.1)' : 'none',
+        overflow: 'hidden',
+      }}
+    >
+      <div className="bg-gradient-to-r from-pink-500 to-fuchsia-600 p-3 flex justify-between items-center shadow-md">
         <div className="flex items-center text-white">
           <FiEdit3 className="mr-2" size={20} />
           <h2 className="font-bold text-lg">Collaborative Canvas</h2>
@@ -134,19 +173,21 @@ export default function NoteEditor({ noteId }) {
           <button
             onClick={() => setFullScreen(!fullScreen)}
             className="p-2 bg-white/20 hover:bg-white/30 rounded-lg text-white transition-colors"
+            aria-label={fullScreen ? "Exit fullscreen" : "Enter fullscreen"}
           >
             {fullScreen ? <FiMinimize2 size={20} /> : <FiMaximize2 size={20} />}
           </button>
           <button
             onClick={handleManualSave}
             className="p-2 bg-white/20 hover:bg-white/30 rounded-lg text-white transition-colors"
+            aria-label="Save"
           >
             <FiSave size={20} />
           </button>
         </div>
       </div>
 
-      <div className={`pt-14 ${fullScreen ? "h-[calc(100vh-56px)]" : "h-full"}`}>
+      <div className="flex-1" style={{ height: fullScreen ? 'calc(100vh - 64px)' : '100%' }}>
         <Excalidraw
           ref={excalidrawRef}
           excalidrawAPI={(api) => setExcalidrawAPI(api)}
@@ -156,10 +197,10 @@ export default function NoteEditor({ noteId }) {
             scrollToContent: true,
           }}
           onChange={handleChange}
-          theme="light"
+          theme="dark"
           gridModeEnabled
           zenModeEnabled
-          viewBackgroundColor="#f8fafc"
+          viewBackgroundColor="#111111"
         />
       </div>
     </div>

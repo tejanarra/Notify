@@ -1,70 +1,292 @@
-# Getting Started with Create React App
+# 🌟 Notify
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+  <img src="/api/placeholder/800/200" alt="Notify Banner" />
+  <p align="center">
+    <strong>Modern collaborative note-taking for seamless teamwork</strong>
+  </p>
+</div>
 
-## Available Scripts
+<p align="center">
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Excalidraw-6366F1?style=for-the-badge&logo=pencil&logoColor=white" alt="Excalidraw" />
+</p>
 
-In the project directory, you can run:
+## ✨ Features
 
-### `npm start`
+### 🎨 Rich Collaborative Experience
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Real-time drawing board** powered by Excalidraw
+- **Collaborative chat** with read receipts
+- **Member management** with online presence indicators
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 🔒 Complete Authentication
 
-### `npm test`
+- Secure email/password authentication
+- User profiles with status indicators
+- Role-based permissions (note owners vs. collaborators)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🖌️ Modern Design
 
-### `npm run build`
+- Stunning gradient UI with pink/fuchsia theme
+- Responsive layout for all screen sizes
+- Beautiful animations and transitions
+- Dark mode optimized interface
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🚀 Smart Note Management
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Create and manage personal notes
+- Share notes with team members
+- Delete notes with confirmation
+- Unread message notifications
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 📱 Screenshots
 
-### `npm run eject`
+<div align="center">
+  <img src="/api/placeholder/400/240" alt="Dashboard" />
+  <img src="/api/placeholder/400/240" alt="Note Editor" />
+  <img src="/api/placeholder/400/240" alt="Collaborators" />
+  <img src="/api/placeholder/400/240" alt="Chat" />
+</div>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🚀 Getting Started
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Prerequisites
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Node.js (v14+)
+- npm or yarn
+- Firebase account
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Installation
 
-## Learn More
+1. **Clone the repository**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+   ```bash
+   git clone https://github.com/tejanarra/Notify.git
+   cd notify
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. **Install dependencies**
 
-### Code Splitting
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+3. **Set up Firebase**
 
-### Analyzing the Bundle Size
+   - Create a Firebase project at [console.firebase.google.com](https://console.firebase.google.com)
+   - Enable Authentication (Email/Password)
+   - Set up Realtime Database
+   - Create a web app and get your configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+4. **Configure environment variables**
+   Create a `.env` file in the root directory:
 
-### Making a Progressive Web App
+   ```
+   REACT_APP_FIREBASE_API_KEY=your_api_key
+   REACT_APP_FIREBASE_AUTH_DOMAIN=your_auth_domain
+   REACT_APP_FIREBASE_PROJECT_ID=your_project_id
+   REACT_APP_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+   REACT_APP_FIREBASE_APP_ID=your_app_id
+   REACT_APP_FIREBASE_DATABASE_URL=your_database_url
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+5. **Run the development server**
 
-### Advanced Configuration
+   ```bash
+   npm start
+   # or
+   yarn start
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+6. **Build for production**
+   ```bash
+   npm run build
+   # or
+   yarn build
+   ```
 
-### Deployment
+## 🔧 Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+notify/
+├── public/
+│   ├── index.html
+│   └── ...
+├── src/
+│   ├── components/
+│   │   ├── AlertModal.js
+│   │   ├── Navbar.js
+│   │   ├── NoteCard.js
+│   │   ├── NoteEditor.js
+│   │   ├── CreateNoteForm.js
+│   │   ├── notes/
+│   │   │   ├── Collaborators.js
+│   │   │   └── NoteChat.js
+│   │   └── ...
+│   ├── contexts/
+│   │   └── AuthContext.js
+│   ├── firebase.js
+│   ├── App.js
+│   └── index.js
+└── ...
+```
 
-### `npm run build` fails to minify
+## 📊 Firebase Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+/ (root)
+├── users/
+│   └── [user_id]/
+│       ├── email
+│       └── displayName
+├── notes/
+│   └── [note_id]/
+│       ├── title
+│       ├── createdAt
+│       ├── owner
+│       ├── ownerEmail
+│       ├── members/
+│       │   └── [user_id]: true
+│       ├── presence/
+│       │   └── [user_id]: timestamp
+│       ├── content/
+│       │   └── drawing/
+│       │       ├── elements
+│       │       ├── appState
+│       │       └── lastUpdated
+│       └── chat/
+│           └── [message_id]/
+│               ├── text
+│               ├── imageUrl
+│               ├── sender
+│               ├── senderEmail
+│               ├── timestamp
+│               └── readBy/
+│                   └── [user_id]: true
+```
+
+## 🔍 Key Components
+
+### AlertModal
+
+A versatile modal component with different styles for various actions (default, delete, logout).
+
+### NoteEditor
+
+Real-time collaborative drawing canvas powered by Excalidraw, with automatic saving and synchronization.
+
+### NoteChat
+
+Full-featured collaborative chat with read receipts, date separators, and full-screen mode.
+
+### Collaborators
+
+Member management interface for adding and removing collaborators with online presence indicators.
+
+### NoteCard
+
+Beautiful card component displaying note information, owner details, and notifications for unread messages.
+
+## 🛠️ Advanced Configuration
+
+### Firebase Rules
+
+For secure data access, configure your Firebase database rules:
+
+```json
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth !== null",
+        ".write": "$uid === auth.uid"
+      }
+    },
+    "notes": {
+      "$noteId": {
+        ".read": "data.child('members').hasChild(auth.uid) || data.child('owner').val() === auth.uid",
+        ".write": "data.child('owner').val() === auth.uid || (!data.exists() && auth !== null)",
+        "members": {
+          ".write": "data.parent().child('owner').val() === auth.uid"
+        },
+        "chat": {
+          ".write": "data.parent().child('members').hasChild(auth.uid) || data.parent().child('owner').val() === auth.uid"
+        },
+        "content": {
+          ".write": "data.parent().child('members').hasChild(auth.uid) || data.parent().child('owner').val() === auth.uid"
+        },
+        "presence": {
+          ".write": "data.parent().child('members').hasChild(auth.uid) || data.parent().child('owner').val() === auth.uid"
+        }
+      }
+    }
+  }
+}
+```
+
+## 🌐 Deployment
+
+### Firebase Hosting
+
+1. Install Firebase CLI:
+
+   ```bash
+   npm install -g firebase-tools
+   ```
+
+2. Login to Firebase:
+
+   ```bash
+   firebase login
+   ```
+
+3. Initialize Firebase:
+
+   ```bash
+   firebase init
+   ```
+
+   - Select Hosting
+   - Select your project
+   - Set "build" as your public directory
+   - Configure as a single-page app
+
+4. Deploy:
+   ```bash
+   firebase deploy
+   ```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgements
+
+- [React](https://reactjs.org/)
+- [Firebase](https://firebase.google.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Excalidraw](https://excalidraw.com/)
+- [React Icons](https://react-icons.github.io/react-icons/)
+- [FreePik | StorySet](https://storyset.com/business)
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/yourusername">Sri Sai Teja Narra</a>
+</p>

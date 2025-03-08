@@ -28,7 +28,6 @@ export default function Collaborators({ noteId, isOwner }) {
 
   const inputRef = useRef(null);
 
-  // Memoize database references
   const membersRef = useMemo(
     () => ref(database, `notes/${noteId}/members`),
     [noteId]
@@ -38,12 +37,10 @@ export default function Collaborators({ noteId, isOwner }) {
     [noteId]
   );
 
-  // Memoize state updater
   const updateState = useCallback((newState) => {
     setState((prev) => ({ ...prev, ...newState }));
   }, []);
 
-  // Memoize data fetching functions
   const fetchUserDetails = useCallback(async (userId) => {
     const snapshot = await get(ref(database, `users/${userId}`));
     return { userId, email: snapshot.val()?.email };
@@ -74,7 +71,6 @@ export default function Collaborators({ noteId, isOwner }) {
     [updateState]
   );
 
-  // Setup Firebase listeners
   useEffect(() => {
     const unsubscribeMembers = onValue(membersRef, handleMembersUpdate);
     const unsubscribePresence = onValue(presenceRef, handlePresenceUpdate);
@@ -134,8 +130,8 @@ export default function Collaborators({ noteId, isOwner }) {
     <div
       className={`flex flex-col h-full ${
         state.fullScreen
-          ? "fixed inset-0 z-50 bg-white"
-          : "border rounded-2xl shadow-lg w-full overflow-hidden"
+          ? "fixed inset-0 z-50 bg-black"
+          : "border border-pink-500/20 rounded-2xl shadow-lg shadow-pink-500/20 w-full overflow-hidden"
       }`}
     >
       <CollaboratorsHeader
@@ -147,7 +143,7 @@ export default function Collaborators({ noteId, isOwner }) {
       />
 
       <div
-        className="flex-1 overflow-y-auto bg-gray-50 p-4 space-y-4"
+        className="flex-1 overflow-y-auto bg-gray-900 p-4 space-y-4"
         style={{ height: state.fullScreen ? "calc(100vh - 132px)" : "250px" }}
       >
         <CollaboratorsAlert

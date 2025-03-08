@@ -33,7 +33,6 @@ const database = getDatabase(app);
 const auth = getAuth(app);
 setPersistence(auth, browserSessionPersistence);
 
-// Auth functions
 export const signUp = (email, password) => {
   return createUserWithEmailAndPassword(auth, email, password);
 };

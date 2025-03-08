@@ -4,7 +4,7 @@ import { IoExpand, IoContract } from "react-icons/io5";
 
 export default function CollaboratorsHeader({ fullScreen, memberCount, onFullscreenToggle }) {
   return (
-    <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-4 flex justify-between items-center">
+    <div className="bg-gradient-to-r from-pink-500 to-fuchsia-600 p-4 flex justify-between items-center rounded-t-2xl shadow-lg shadow-pink-500/20">
       <div className="flex items-center gap-2">
         <FiUsers className="text-white text-xl" />
         <h3 className="font-bold text-lg text-white">Collaborators</h3>

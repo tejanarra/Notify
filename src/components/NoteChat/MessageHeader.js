@@ -3,7 +3,7 @@ import { FiMessageCircle } from "react-icons/fi";
 import { IoExpand, IoContract } from "react-icons/io5";
 
 export const MessageHeader = React.memo(({ fullScreen, setFullScreen }) => (
-  <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-3 flex justify-between items-center shadow-sm">
+  <div className="bg-gradient-to-r from-pink-500 to-fuchsia-600 p-3 flex justify-between items-center shadow-sm">
     <div className="flex items-center gap-2">
       <FiMessageCircle className="text-white text-xl" />
       <h3 className="font-bold text-lg text-white">Collaborative Chat</h3>

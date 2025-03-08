@@ -7,17 +7,17 @@ export default function CollaboratorsAlert({ type, message, onDismiss }) {
 
   const config = {
     error: {
-      icon: <FiAlertCircle className="text-red-500" />,
-      colors: "bg-red-50 border-red-100 text-red-800"
+      icon: <FiAlertCircle className="text-red-400" />,
+      colors: "bg-gray-900 border-red-500/30 text-red-400"
     },
     success: {
-      icon: <IoCheckmarkCircle className="text-green-500" />,
-      colors: "bg-green-50 border-green-100 text-green-800"
+      icon: <IoCheckmarkCircle className="text-green-400" />,
+      colors: "bg-gray-900 border-green-500/30 text-green-400"
     }
   };
 
   return (
-    <div className={`${config[type].colors} px-4 py-3 rounded-xl flex items-center gap-2 text-sm animate-fadeIn`}>
+    <div className={`${config[type].colors} px-4 py-3 rounded-xl flex items-center gap-2 text-sm animate-fadeIn border shadow-lg transition-all duration-300`}>
       {config[type].icon}
       <span>{message}</span>
       <button 

@@ -15,7 +15,6 @@ export default function NoteChat({ noteId }) {
   const endOfMessagesRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Fetch members
   useEffect(() => {
     const fetchMembers = async () => {
       try {
@@ -28,7 +27,6 @@ export default function NoteChat({ noteId }) {
     fetchMembers();
   }, [noteId]);
 
-  // Fetch messages
   useEffect(() => {
     const unsubscribe = onValue(chatRef.current, (snapshot) => {
       const data = snapshot.val() || {};
@@ -41,7 +39,6 @@ export default function NoteChat({ noteId }) {
     return () => unsubscribe();
   }, [noteId]);
 
-  // Scroll to bottom
   useEffect(() => {
     endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -89,11 +86,15 @@ export default function NoteChat({ noteId }) {
   }, [members]);
 
   return (
-    <div className={`flex flex-col h-full ${fullScreen ? "fixed inset-0 z-50 bg-white" : "border rounded-2xl w-full overflow-hidden"}`}>
+    <div className={`flex flex-col h-full ${
+      fullScreen 
+        ? "fixed inset-0 z-50 bg-black" 
+        : "border border-pink-500/30 rounded-2xl w-full overflow-hidden shadow-lg shadow-pink-500/10"
+    }`}>
       <MessageHeader fullScreen={fullScreen} setFullScreen={setFullScreen} />
       
       <div 
-        className="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50"
+        className="flex-1 overflow-y-auto p-3 space-y-3 bg-black"
         style={{ height: fullScreen ? "calc(100vh - 120px)" : "auto" }}
         onClick={markMessagesAsRead}
       >

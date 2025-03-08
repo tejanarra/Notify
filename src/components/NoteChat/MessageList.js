@@ -31,7 +31,7 @@ export const MessageList = ({
 
 const DateSeparator = ({ date }) => (
   <div className="flex justify-center">
-    <div className="px-3 py-1 bg-gray-200 rounded-full text-xs text-gray-600">
+    <div className="px-3 py-1 bg-gray-800 border border-pink-500/20 rounded-full text-xs text-gray-300">
       {date === new Date().toLocaleDateString() ? "Today" : date}
     </div>
   </div>
@@ -46,12 +46,12 @@ const Message = React.memo(({ msg, index, msgs, isReadByOthers }) => {
       <div
         className={`relative max-w-[75%] ${
           isSender
-            ? "bg-indigo-500 text-white rounded-t-xl rounded-bl-xl"
-            : "bg-white border rounded-t-xl rounded-br-xl shadow-sm"
+            ? "bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white shadow-lg shadow-pink-500/20 rounded-t-xl rounded-bl-xl"
+            : "bg-gray-800 border border-pink-500/20 text-gray-100 rounded-t-xl rounded-br-xl shadow-sm"
         } px-4 py-3`}
       >
         {!isSender && showAvatar && (
-          <div className="text-indigo-600 text-xs font-medium mb-1">
+          <div className="text-pink-400 text-xs font-medium mb-1">
             {msg.senderEmail.split("@")[0]}
           </div>
         )}
@@ -64,7 +64,7 @@ const Message = React.memo(({ msg, index, msgs, isReadByOthers }) => {
           />
         )}
 
-        <div className={isSender ? "text-white" : "text-gray-800"}>
+        <div className={isSender ? "text-white" : "text-gray-100"}>
           {msg.text}
         </div>
         <MessageTimestamp
@@ -88,7 +88,7 @@ const MessageTimestamp = ({ msg, isSender, isReadByOthers }) => {
   return (
     <div
       className={`text-xs mt-1 flex items-center justify-end gap-1 ${
-        isSender ? "text-indigo-100" : "text-gray-400"
+        isSender ? "text-pink-200" : "text-gray-400"
       }`}
     >
       <span>{formatTimestamp(msg.timestamp)}</span>
@@ -103,11 +103,11 @@ const MessageTimestamp = ({ msg, isSender, isReadByOthers }) => {
 };
 
 const EmptyState = () => (
-  <div className="h-full flex flex-col items-center justify-center p-6 text-gray-500 text-center">
-    <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
-      <FiMessageCircle className="text-indigo-500 text-2xl" />
+  <div className="h-full flex flex-col items-center justify-center p-6 text-gray-300 text-center">
+    <div className="w-16 h-16 bg-gray-800 border border-pink-500/30 rounded-full flex items-center justify-center mb-4">
+      <FiMessageCircle className="text-pink-500 text-2xl" />
     </div>
-    <h4 className="font-medium text-gray-700 mb-1">No messages yet</h4>
+    <h4 className="font-medium text-gray-100 mb-1">No messages yet</h4>
     <p className="text-sm">Start the conversation by sending a message.</p>
   </div>
 );

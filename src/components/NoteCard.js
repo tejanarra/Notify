@@ -14,7 +14,6 @@ export const NoteCard = ({ note, onDelete }) => {
   useEffect(() => {
     const chatRef = ref(database, `notes/${note.id}/chat`);
     
-    // Listen to chat updates and check for unread messages
     onValue(chatRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
@@ -25,7 +24,6 @@ export const NoteCard = ({ note, onDelete }) => {
       }
     });
 
-    // Close menu when clicking outside
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setMenuOpen(false);
@@ -65,26 +63,23 @@ export const NoteCard = ({ note, onDelete }) => {
     setMenuOpen(!menuOpen);
   };
 
-  // Generate a consistent color based on the note title
   const getTitleColor = () => {
     const colors = [
-      "bg-blue-500",
-      "bg-purple-500",
-      "bg-pink-500",
-      "bg-indigo-500",
-      "bg-teal-500",
-      "bg-cyan-500",
-      "bg-green-500",
-      "bg-amber-500"
+      "from-pink-500 to-fuchsia-600",
+      "from-fuchsia-500 to-purple-600",
+      "from-purple-500 to-indigo-600",
+      "from-indigo-500 to-blue-600",
+      "from-blue-500 to-cyan-600",
+      "from-cyan-500 to-teal-600",
+      "from-teal-500 to-green-600",
+      "from-green-500 to-emerald-600"
     ];
     
-    // Use the first character of the title to pick a color
     const titleChar = (note.title || "U").charAt(0).toLowerCase();
     const colorIndex = titleChar.charCodeAt(0) % colors.length;
     return colors[colorIndex];
   };
 
-  // Get first letter of title for the icon
   const getInitial = () => {
     return (note.title || "U").charAt(0).toUpperCase();
   };
@@ -92,68 +87,66 @@ export const NoteCard = ({ note, onDelete }) => {
   return (
     <Link
       to={`/notes/${note.id}`}
-      className="block relative bg-white overflow-hidden rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+      className="block relative bg-gray-900 overflow-hidden rounded-2xl shadow-lg border border-pink-500/20 hover:border-pink-500/40 hover:shadow-xl hover:shadow-pink-500/30 transition-all duration-300 transform hover:-translate-y-1"
     >
-      {/* Card content */}
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-fuchsia-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
       <div className="flex flex-col h-full">
-        {/* Header with title initial and unread indicator */}
-        <div className="flex items-center p-4 relative">
-          <div className={`w-10 h-10 rounded-lg text-white flex items-center justify-center font-bold text-lg ${getTitleColor()}`}>
+        <div className="flex items-center p-6 relative">
+          <div className={`w-12 h-12 rounded-xl text-white flex items-center justify-center font-bold text-lg bg-gradient-to-r ${getTitleColor()} shadow-md shadow-pink-500/40`}>
             {getInitial()}
           </div>
           
-          <div className="ml-3 flex-1 truncate">
-            <h3 className="font-semibold text-gray-800 truncate">
+          <div className="ml-4 flex-1 truncate">
+            <h3 className="font-bold text-lg text-white truncate">
               {note.title || "Untitled Note"}
             </h3>
-            <div className="flex items-center gap-1 text-xs text-gray-500">
+            <div className="flex items-center gap-1.5 text-sm text-gray-400 mt-0.5">
               <FaRegClock className="w-3 h-3" />
               <span>{formatDate(note.createdAt)}</span>
             </div>
           </div>
           
           {unreadMessages && (
-            <div className="absolute right-12 top-4 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white"></div>
+            <div className="absolute right-16 top-6 w-3 h-3 bg-pink-500 rounded-full ring-2 ring-gray-900 shadow-sm shadow-pink-500/50 animate-pulse"></div>
           )}
           
           <div className="relative" ref={menuRef}>
             <button
               onClick={toggleMenu}
-              className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
+              className="p-2 rounded-full hover:bg-gray-800 text-gray-400 hover:text-pink-400 transition-colors"
               aria-label="Options"
             >
               <MdMoreHoriz className="w-5 h-5" />
             </button>
             
             {menuOpen && (
-              <div className="absolute right-0 mt-1 w-40 py-1 bg-white rounded-md shadow-lg z-10 border border-gray-100">
+              <div className="absolute right-0 mt-2 w-48 py-2 bg-gray-800 rounded-xl shadow-lg z-10 border border-pink-500/30">
                 <button
                   onClick={handleDeleteClick}
-                  className="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                  className="flex w-full items-center px-4 py-2.5 text-sm text-pink-400 hover:bg-gray-700/80 transition-colors"
                 >
-                  <FaTrash className="w-3.5 h-3.5 mr-2" />
+                  <FaTrash className="w-4 h-4 mr-3" />
                   <span>Delete Note</span>
                 </button>
               </div>
             )}
           </div>
         </div>
-      
         
-        {/* Footer with metadata */}
-        <div className="mt-auto px-4 py-3 border-t border-gray-100 flex justify-between items-center">
+        <div className="mt-auto px-6 py-4 border-t border-gray-800 flex justify-between items-center">
           <div className="flex items-center">
-            <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-indigo-100 text-indigo-800 text-xs">
-              <MdEdit className="w-3.5 h-3.5" />
+            <span className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-pink-500/20 text-pink-400">
+              <MdEdit className="w-4 h-4" />
             </span>
             {note.owner === auth.currentUser?.uid ? (
-              <span className="ml-2 text-xs font-medium text-gray-600">Personal</span>
+              <span className="ml-2.5 text-sm font-medium text-gray-400">Personal</span>
             ) : (
-              <div className="flex items-center ml-1.5">
-                <span className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center mr-1.5">
-                  <FaUserAlt className="w-2.5 h-2.5 text-gray-600" />
+              <div className="flex items-center ml-2.5">
+                <span className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center mr-2">
+                  <FaUserAlt className="w-3 h-3 text-gray-400" />
                 </span>
-                <span className="text-xs font-medium text-gray-600 truncate max-w-[80px]">
+                <span className="text-sm font-medium text-gray-400 truncate max-w-[100px]">
                   {note.ownerEmail?.split('@')[0] || "Unknown"}
                 </span>
               </div>
@@ -161,9 +154,9 @@ export const NoteCard = ({ note, onDelete }) => {
           </div>
           
           {unreadMessages && (
-            <div className="flex items-center gap-1 px-2 py-0.5 bg-red-50 text-red-600 text-xs rounded-full">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-pink-500/20 text-pink-400 text-xs rounded-full border border-pink-500/30">
               <FaBell className="w-3 h-3" />
-              <span>New</span>
+              <span>New messages</span>
             </div>
           )}
         </div>

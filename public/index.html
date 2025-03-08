@@ -4,18 +4,56 @@
     <meta charset="utf-8" />
     <link rel="icon" href="favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#ec4899" />
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Notify - A powerful collaborative whiteboard workspace that helps teams visualize ideas, brainstorm, and create together in real-time with a stunning neon interface."
     />
-    <link rel="apple-touch-icon" href="logo.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-    <title>React App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              pink: {
+                400: '#f472b6',
+                500: '#ec4899',
+                600: '#db2777'
+              },
+              fuchsia: {
+                600: '#c026d3',
+                700: '#a21caf'
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <title>Notify - Collaborative Workspaces Reimagined</title>
+    <link rel="preload" as="image" href="/landing-page-images/main.jpg" />
   </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+  <body class="bg-black">
+    <noscript>
+      <div class="flex items-center justify-center h-screen bg-black text-white p-4">
+        <div class="max-w-md text-center">
+          <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600 mb-4">Notify</h1>
+          <p>You need to enable JavaScript to run this app.</p>
+        </div>
+      </div>
+    </noscript>
     <div id="root"></div>
+    <div id="loader" class="flex items-center justify-center h-screen bg-black">
+      <div class="flex flex-col items-center">
+        <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600 mb-4">Notify</h1>
+        <div class="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    </div>
+    <script>
+      window.addEventListener('load', function() {
+        document.getElementById('loader').style.display = 'none';
+      });
+    </script>
   </body>
 </html>

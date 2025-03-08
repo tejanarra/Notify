@@ -1,4 +1,3 @@
-// App.jsx
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Navbar } from "./components/Navbar";
@@ -12,9 +11,9 @@ import LandingPage from "./pages/LandingPage";
 export default function App() {
   return (
     <AuthProvider>
-      <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="min-h-screen bg-black flex flex-col">
         <Navbar />
-        <main className="flex-1">
+        <main className="flex-1 flex flex-col">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
