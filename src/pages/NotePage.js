@@ -204,8 +204,8 @@ export default function NotePage() {
           <button
             onClick={() => setActiveTab("editor")}
             className={`flex flex-col items-center justify-center w-1/3 h-full ${
-              activeTab === "editor" 
-                ? "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600" 
+              activeTab === "editor"
+                ? "text-white bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600"
                 : "text-gray-400"
             }`}
           >
@@ -215,8 +215,8 @@ export default function NotePage() {
           <button
             onClick={() => setActiveTab("chat")}
             className={`flex flex-col items-center justify-center w-1/3 h-full ${
-              activeTab === "chat" 
-                ? "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600" 
+              activeTab === "chat"
+                ? "text-white bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600"
                 : "text-gray-400"
             }`}
           >
@@ -227,7 +227,7 @@ export default function NotePage() {
             onClick={() => setActiveTab("collaborators")}
             className={`flex flex-col items-center justify-center w-1/3 h-full ${
               activeTab === "collaborators"
-                ? "text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600" 
+                ? "text-white bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600"
                 : "text-gray-400"
             }`}
           >

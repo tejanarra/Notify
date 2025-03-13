@@ -46,7 +46,10 @@ export default function NoteEditor({ noteId }) {
     }
   }, [excalidrawAPI]);
 
-  const debouncedSave = useCallback(debounce(saveScene, 10000), [saveScene]);
+  useEffect(() => {
+    const debouncedSave = debounce(saveScene, 10000);
+    return () => debouncedSave.cancel();
+  }, [saveScene]);
 
   useEffect(() => {
     const unsubscribe = onValue(noteRef.current, (snapshot) => {
@@ -65,9 +68,8 @@ export default function NoteEditor({ noteId }) {
 
     return () => {
       unsubscribe();
-      debouncedSave.cancel();
     };
-  }, [excalidrawAPI, debouncedSave]);
+  }, [excalidrawAPI]);
 
   const LoadingSpinner = () => (
     <div className="flex justify-center items-center w-full h-full">
