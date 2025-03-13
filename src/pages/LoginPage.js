@@ -7,7 +7,8 @@ import {
   getAuth,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth } from "../firebase";
+import { ref, set } from "firebase/database";
+import { auth, database } from "../firebase";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -21,6 +22,16 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      const user = auth.currentUser;
+      if (user) {
+        await set(ref(database, `users/${user.uid}`), {
+          email: user.email,
+          username: user.email.split("@")[0],
+          onlineStatus: true,
+          notes: {},
+          collaborating: {},
+        });
+      }
       navigate("/notes");
     } catch (err) {
       setError(err.message);
@@ -30,7 +41,17 @@ export default function LoginPage() {
   const handleGoogleSignup = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      await set(ref(database, `users/${user.uid}`), {
+        email: user.email,
+        username: user.displayName || user.email.split("@")[0],
+        profilePic: user.photoURL,
+        onlineStatus: true,
+        notes: {},
+        collaborating: {},
+      });
       navigate("/notes");
     } catch (err) {
       setError(err.message);
@@ -61,13 +82,15 @@ export default function LoginPage() {
         ></div>
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-fuchsia-600/10"></div>
       </div>
-      
+
       <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-8 max-h-[calc(100vh-8rem)] overflow-y-auto relative z-10 border border-pink-500/30">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600">
             Notify
           </h2>
-          <h3 className="text-2xl font-semibold text-white mt-4">Welcome Back</h3>
+          <h3 className="text-2xl font-semibold text-white mt-4">
+            Welcome Back
+          </h3>
         </div>
 
         {error && (
