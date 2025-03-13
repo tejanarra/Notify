@@ -15,21 +15,19 @@ export default function NoteEditor({ noteId }) {
   const [fullScreen, setFullScreen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isCollaborating, setIsCollaborating] = useState(false);
-  const noteRef = useRef(ref(database, `notes/${noteId}/content/drawing`));
+  const [libraryItems, setLibraryItems] = useState(null);
+  const sceneRef = useRef(ref(database, `notes/${noteId}/scene`));
 
   const saveScene = useCallback(async () => {
     if (!excalidrawAPI) return;
     try {
       const elements = excalidrawAPI.getSceneElements();
       const appState = excalidrawAPI.getAppState();
-      const files = excalidrawAPI.getFiles();
+      const files = Object.values(excalidrawAPI.getFiles());
 
-      const serializedData = serializeAsJSON(
-        elements,
-        appState,
-        files,
-        "database"
-      );
+      console.log(excalidrawAPI);
+
+      const serializedData = serializeAsJSON(elements, appState);
 
       const saveData = JSON.parse(serializedData);
 
@@ -37,12 +35,14 @@ export default function NoteEditor({ noteId }) {
       saveData.appState.scrollX = appState.scrollX;
       saveData.appState.scrollY = appState.scrollY;
       saveData.appState.zoom = appState.zoom;
+      saveData.files = files;
+      saveData.libraryItems = libraryItems;
 
-      await set(noteRef.current, saveData);
+      await set(sceneRef.current, saveData);
     } catch (error) {
       console.error("Save failed:", error);
     }
-  }, [excalidrawAPI]);
+  }, [excalidrawAPI, libraryItems]);
 
   useEffect(() => {
     const debouncedSave = debounce(saveScene, 10000);
@@ -50,14 +50,25 @@ export default function NoteEditor({ noteId }) {
   }, [saveScene]);
 
   useEffect(() => {
-    const unsubscribe = onValue(noteRef.current, (snapshot) => {
+    const unsubscribe = onValue(sceneRef.current, (snapshot) => {
       try {
         const data = snapshot.val();
         if (!data || !excalidrawAPI) return;
         excalidrawAPI.updateScene({
           elements: restoreElements(data.elements || []),
           appState: data.appState,
+          files: data.files,
         });
+
+        if (data.files) {
+          excalidrawAPI.addFiles(data.files);
+        }
+        if (data.libraryItems) {
+          excalidrawAPI.updateLibrary({
+            libraryItems: data.libraryItems,
+            merge: true,
+          });
+        }
       } catch (error) {
         console.error("Load error:", error);
       }
@@ -122,12 +133,12 @@ export default function NoteEditor({ noteId }) {
             excalidrawAPI={(api) => setExcalidrawAPI(api)}
             initialData={{
               appState: {
-                zenModeEnabled: true,
                 viewBackgroundColor: "#fff",
                 theme: "dark",
               },
             }}
-            gridModeEnabled
+            onLibraryChange={(libraryItems) => setLibraryItems(libraryItems)}
+            // gridModeEnabled
             renderTopRightUI={() => (
               <LiveCollaborationTrigger
                 isCollaborating={isCollaborating}
