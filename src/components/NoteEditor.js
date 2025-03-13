@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   Excalidraw,
-  restoreAppState,
   restoreElements,
   serializeAsJSON,
 } from "@excalidraw/excalidraw";
@@ -9,18 +8,15 @@ import { ref, set, onValue } from "firebase/database";
 import { database } from "../firebase";
 import { debounce } from "lodash";
 import { FiEdit3, FiSave, FiMinimize2, FiMaximize2 } from "react-icons/fi";
-import { LiveCollaborationTrigger } from "@excalidraw/excalidraw"; // Import the LiveCollaborationTrigger
+import { LiveCollaborationTrigger } from "@excalidraw/excalidraw";
 
 export default function NoteEditor({ noteId }) {
   const [excalidrawAPI, setExcalidrawAPI] = useState(null);
   const [fullScreen, setFullScreen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isCollaborating, setIsCollaborating] = useState(false); // Manage collaboration state
+  const [isCollaborating, setIsCollaborating] = useState(false);
   const noteRef = useRef(
     ref(database, `notes/${noteId}/content/drawing/elements`)
-  );
-  const appRef = useRef(
-    ref(database, `notes/${noteId}/content/drawing/appState`)
   );
 
   const saveScene = useCallback(async () => {
@@ -119,7 +115,7 @@ export default function NoteEditor({ noteId }) {
         className="flex-1"
         style={{ height: fullScreen ? "calc(100vh - 64px)" : "100%" }}
       >
-        {loading ? ( // Conditionally render the loading spinner
+        {loading ? (
           <LoadingSpinner />
         ) : (
           <Excalidraw
