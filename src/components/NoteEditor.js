@@ -15,9 +15,7 @@ export default function NoteEditor({ noteId }) {
   const [fullScreen, setFullScreen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isCollaborating, setIsCollaborating] = useState(false);
-  const noteRef = useRef(
-    ref(database, `notes/${noteId}/content/drawing/elements`)
-  );
+  const noteRef = useRef(ref(database, `notes/${noteId}/content/drawing`));
 
   const saveScene = useCallback(async () => {
     if (!excalidrawAPI) return;
