@@ -21,7 +21,7 @@ export default function NoteEditor({ noteId }) {
   const saveScene = useCallback(async () => {
     if (!excalidrawAPI) return;
 
-    if (noteId == "-OLGdQjXLsqy3FvKb7mH") {
+    if (noteId === "-OLGdQjXLsqy3FvKb7mH") {
       excalidrawAPI.setToast({
         message: "This is a sample note create a new note to get started",
         closable: true,
@@ -61,7 +61,7 @@ export default function NoteEditor({ noteId }) {
         duration: 10000,
       });
     }
-  }, [excalidrawAPI, libraryItems]);
+  }, [excalidrawAPI, libraryItems, noteId]);
 
   useEffect(() => {
     const debouncedSave = debounce(saveScene, 10000);
