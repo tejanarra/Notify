@@ -20,12 +20,20 @@ export default function NoteEditor({ noteId }) {
 
   const saveScene = useCallback(async () => {
     if (!excalidrawAPI) return;
+
+    if (noteId == "-OLGdQjXLsqy3FvKb7mH") {
+      excalidrawAPI.setToast({
+        message: "This is a sample note create a new note to get started",
+        closable: true,
+        duration: 10000,
+      });
+      return;
+    }
+
     try {
       const elements = excalidrawAPI.getSceneElements();
       const appState = excalidrawAPI.getAppState();
       const files = Object.values(excalidrawAPI.getFiles());
-
-      console.log(excalidrawAPI);
 
       const serializedData = serializeAsJSON(elements, appState);
 
@@ -39,8 +47,19 @@ export default function NoteEditor({ noteId }) {
       saveData.libraryItems = libraryItems;
 
       await set(sceneRef.current, saveData);
+
+      excalidrawAPI.setToast({
+        message: "SAVED",
+        closable: true,
+        duration: 10000,
+      });
     } catch (error) {
       console.error("Save failed:", error);
+      excalidrawAPI.setToast({
+        message: error,
+        closable: true,
+        duration: 10000,
+      });
     }
   }, [excalidrawAPI, libraryItems]);
 

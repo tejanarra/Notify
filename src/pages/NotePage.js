@@ -43,8 +43,13 @@ export default function NotePage() {
     const noteRef = ref(database, `notes/${noteId}`);
     const unsubscribe = onValue(noteRef, (snapshot) => {
       const data = snapshot.val();
-      if (!data) {
-        navigate("/not-found", { replace: true });
+      if (
+        !data ||
+        !auth.currentUser ||
+        !data.members ||
+        !data.members[auth.currentUser.uid]
+      ) {
+        navigate("/notes", { replace: true });
         return;
       }
 

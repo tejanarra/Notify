@@ -26,6 +26,11 @@ export default function SignupPage() {
         });
       }
 
+      await set(
+        ref(database, `notes/-OLGdQjXLsqy3FvKb7mH/members/${user.uid}`),
+        true
+      );
+
       navigate("/notes");
     } catch (err) {
       setError(err.message);
@@ -47,6 +52,11 @@ export default function SignupPage() {
         collaborating: {},
       });
 
+      await set(
+        ref(database, `notes/-OLGdQjXLsqy3FvKb7mH/members/${user.uid}`),
+        true
+      );
+
       navigate("/notes");
     } catch (err) {
       setError(err.message);
@@ -65,21 +75,23 @@ export default function SignupPage() {
         ></div>
         <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-fuchsia-600/10"></div>
       </div>
-      
+
       <div className="w-full max-w-md bg-gray-900 rounded-2xl shadow-2xl p-8 relative z-10 border border-pink-500/30">
         <div className="text-center mb-8">
           <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-fuchsia-600">
             Notify
           </h2>
-          <h3 className="text-2xl font-semibold text-white mt-4">Create New Account</h3>
+          <h3 className="text-2xl font-semibold text-white mt-4">
+            Create New Account
+          </h3>
         </div>
-        
+
         {error && (
           <div className="mb-6 p-3 bg-pink-500/20 text-pink-300 rounded-lg border border-pink-500/30">
             {error}
           </div>
         )}
-        
+
         <form onSubmit={handleSignup} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -114,13 +126,13 @@ export default function SignupPage() {
             Create Account
           </button>
         </form>
-        
+
         <div className="my-6 flex items-center">
           <div className="flex-1 border-t border-gray-700"></div>
           <span className="px-4 text-gray-400 text-sm">Or continue with</span>
           <div className="flex-1 border-t border-gray-700"></div>
         </div>
-        
+
         <button
           onClick={handleGoogleSignup}
           className="w-full flex items-center justify-center gap-3 bg-gray-800 border border-gray-700 hover:border-pink-500/50 text-gray-300 py-3 px-4 rounded-lg font-medium transition-all hover:bg-gray-800/80"
@@ -146,7 +158,7 @@ export default function SignupPage() {
           </svg>
           Sign up with Google
         </button>
-        
+
         <p className="text-center mt-6 text-gray-400">
           Already have an account?{" "}
           <Link
