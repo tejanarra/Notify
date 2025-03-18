@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ref, onValue, set, onDisconnect } from "firebase/database";
 import { database, auth } from "../firebase";
@@ -23,6 +23,40 @@ export default function NotePage() {
   const [activeUsers, setActiveUsers] = useState({});
   const [lastEdited, setLastEdited] = useState(null);
   const [activeTab, setActiveTab] = useState("editor");
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const contentRef = useRef(null);
+
+  const handleFullscreenChange = (fullscreenState) => {
+    setIsFullscreen(fullscreenState);
+  };
+
+  useEffect(() => {
+    const updateContentHeight = () => {
+      if (!contentRef.current) return;
+      const viewportHeight = window.innerHeight;
+      const fixedElementsHeight = isFullscreen ? 0 : 56 + 64;
+      const availableHeight = viewportHeight - fixedElementsHeight;
+      contentRef.current.style.height = `${availableHeight}px`;
+    };
+
+    window.addEventListener("resize", updateContentHeight);
+    window.addEventListener("orientationchange", updateContentHeight);
+    window.visualViewport?.addEventListener("resize", updateContentHeight);
+    window.visualViewport?.addEventListener("scroll", updateContentHeight);
+    updateContentHeight();
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overscrollBehavior = "none";
+      document.documentElement.style.overscrollBehavior = "none";
+    }
+    return () => {
+      window.removeEventListener("resize", updateContentHeight);
+      window.removeEventListener("orientationchange", updateContentHeight);
+      window.visualViewport?.removeEventListener("resize", updateContentHeight);
+      window.visualViewport?.removeEventListener("scroll", updateContentHeight);
+    };
+  }, [isFullscreen]);
 
   useEffect(() => {
     if (!auth.currentUser) return;
@@ -91,7 +125,7 @@ export default function NotePage() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-900">
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-900">
         <div className="text-center">
           <div className="w-16 h-16 mx-auto border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin mb-4"></div>
           <h2 className="text-xl font-semibold text-white mb-2">
@@ -103,42 +137,61 @@ export default function NotePage() {
     );
   }
 
+  if (isFullscreen && activeTab === "editor") {
+    return (
+      <div className="fixed inset-0 bg-black flex flex-col overflow-hidden">
+        <div className="flex-1 w-full h-full overflow-hidden">
+          <NoteEditor
+            noteId={noteId}
+            onFullscreenChange={handleFullscreenChange}
+            isFullscreen={isFullscreen}
+          />
+        </div>
+      </div>
+    );
+  }
+
   const renderMobileContent = () => {
     switch (activeTab) {
       case "editor":
         return (
-          <div className="h-full pb-10 rounded-xl overflow-hidden">
-            <NoteEditor noteId={noteId} />
+          <div className="h-full overflow-hidden relative">
+            <NoteEditor
+              noteId={noteId}
+              onFullscreenChange={handleFullscreenChange}
+            />
           </div>
         );
       case "chat":
         return (
-          <div className="h-full pb-10 flex flex-col bg-gray-900 rounded-lg border border-pink-500/20 overflow-hidden">
+          <div className="h-full flex flex-col bg-gray-900 rounded-lg border border-pink-500/20 overflow-hidden">
             <NoteChat noteId={noteId} />
           </div>
         );
       case "collaborators":
         return (
-          <div className="h-full pb-10 flex flex-col bg-gray-900 rounded-lg border border-pink-500/20 overflow-hidden">
-            <div className="flex-1 overflow-auto p-2">
-              <Collaborators noteId={noteId} isOwner={isOwner} />
-            </div>
+          <div className="h-full flex flex-col bg-gray-900 rounded-lg border border-pink-500/20 overflow-hidden">
+            <Collaborators noteId={noteId} isOwner={isOwner} />
           </div>
         );
       default:
         return (
-          <div className="h-full rounded-xl">
-            <NoteEditor noteId={noteId} />
+          <div className="h-full overflow-hidden">
+            <NoteEditor
+              noteId={noteId}
+              onFullscreenChange={handleFullscreenChange}
+            />
           </div>
         );
     }
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
-      <header className="bg-gray-900 border-b border-pink-500/20 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-6">
-          <div className="flex justify-between items-center h-14">
+    <div className="fixed inset-0 flex flex-col bg-black overflow-hidden">
+      {/* Header - fixed height */}
+      <header className="flex-none bg-gray-900 border-b border-pink-500/20 z-10 shadow-sm h-14">
+        <div className="px-4 h-full">
+          <div className="flex justify-between items-center h-full">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => navigate("/notes")}
@@ -152,7 +205,7 @@ export default function NotePage() {
                 <h1 className="text-lg font-bold text-white truncate">
                   {note.title}
                   {isOwner && (
-                    <span className="ml-1.5 px-1.5 py-0.5 bg-gradient-to-r from-pink-500/20 to-fuchsia-600/20 text-pink-400 text-[11px] rounded-full font-medium border border-pink-500/30">
+                    <span className="ml-1.5 px-1.5 py-0.5 bg-gradient-to-r from-pink-500/20 to-fuchsia-600/20 text-pink-400 text-xs rounded-full font-medium border border-pink-500/30">
                       Owner
                     </span>
                   )}
@@ -165,7 +218,7 @@ export default function NotePage() {
                   </div>
                   <div className="flex items-center">
                     <FiUsers className="mr-1" size={12} />
-                    <span>{activeUserCount} online</span>
+                    <span>{activeUserCount} Collaborators</span>
                   </div>
                 </div>
               </div>
@@ -181,31 +234,34 @@ export default function NotePage() {
         </div>
       </header>
 
-      <div className="flex-1 max-w-7xl mx-auto w-full p-3 lg:p-4">
-        <div className="hidden lg:grid lg:grid-cols-12 gap-4 h-[calc(100vh-74px)]">
+      <div ref={contentRef} className="flex-1 overflow-hidden">
+        <div className="hidden lg:grid lg:grid-cols-12 gap-4 p-4 h-full">
           <div className="lg:col-span-8 h-full">
-            <div className="h-full rounded-xl">
-              <NoteEditor noteId={noteId} />
+            <div className="h-full rounded-xl overflow-hidden relative">
+              <NoteEditor
+                noteId={noteId}
+                onFullscreenChange={handleFullscreenChange}
+              />
             </div>
           </div>
 
-          <div className="lg:col-span-4 flex flex-col gap-4 h-full overflow-hidden">
-            <div className="flex flex-col h-[45%] min-h-[300px] bg-gray-900 rounded-lg border border-pink-500/20 shadow-lg shadow-pink-500/10">
+          <div className="lg:col-span-4 flex flex-col gap-4 h-full">
+            <div className="flex-1 flex flex-col bg-gray-900 rounded-lg border border-pink-500/20 shadow-lg shadow-pink-500/10 overflow-hidden">
               <Collaborators noteId={noteId} isOwner={isOwner} />
             </div>
-            <div className="flex flex-col h-[55%] min-h-[340px] bg-gray-900 rounded-lg border border-pink-500/20 shadow-lg shadow-pink-500/10">
+            <div className="flex-1 flex flex-col bg-gray-900 rounded-lg border border-pink-500/20 shadow-lg shadow-pink-500/10 overflow-hidden">
               <NoteChat noteId={noteId} />
             </div>
           </div>
         </div>
 
-        <div className="lg:hidden h-[calc(100vh-120px)] overflow-hidden">
+        <div className="lg:hidden flex flex-col p-3 h-full">
           {renderMobileContent()}
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-gray-900 border-t border-pink-500/20 shadow-md z-10">
-        <div className="flex justify-around items-center h-16">
+      <div className="flex-none lg:hidden bg-gray-900 border-t border-pink-500/20 shadow-md z-10 h-16">
+        <div className="flex justify-around items-center h-full">
           <button
             onClick={() => setActiveTab("editor")}
             className={`flex flex-col items-center justify-center w-1/3 h-full ${

@@ -7,16 +7,31 @@ import {
 import { ref, set, onValue } from "firebase/database";
 import { database } from "../firebase";
 import { debounce } from "lodash";
-import { FiEdit3, FiSave, FiMinimize2, FiMaximize2 } from "react-icons/fi";
+import { FiEdit3, FiSave } from "react-icons/fi";
+import { IoExpand, IoContract } from "react-icons/io5";
 import { LiveCollaborationTrigger } from "@excalidraw/excalidraw";
 
-export default function NoteEditor({ noteId }) {
+export default function NoteEditor({
+  noteId,
+  onFullscreenChange,
+  isFullscreen,
+}) {
   const [excalidrawAPI, setExcalidrawAPI] = useState(null);
-  const [fullScreen, setFullScreen] = useState(false);
+  const [fullScreen, setFullScreen] = useState(isFullscreen);
   const [loading, setLoading] = useState(true);
   const [isCollaborating, setIsCollaborating] = useState(false);
   const [libraryItems, setLibraryItems] = useState(null);
   const sceneRef = useRef(ref(database, `notes/${noteId}/scene`));
+
+  const toggleFullScreen = () => {
+    setFullScreen((prevState) => {
+      const newFullScreenState = !prevState;
+      if (onFullscreenChange) {
+        onFullscreenChange(newFullScreenState);
+      }
+      return newFullScreenState;
+    });
+  };
 
   const saveScene = useCallback(async () => {
     if (!excalidrawAPI) return;
@@ -107,15 +122,13 @@ export default function NoteEditor({ noteId }) {
 
   return (
     <div
-      className={fullScreen ? "fixed inset-0 z-50 bg-black" : "h-full"}
+      className="h-full"
       style={{
         display: "flex",
         flexDirection: "column",
-        borderRadius: fullScreen ? "0" : "0.75rem",
-        border: !fullScreen ? "1px solid rgba(236, 72, 153, 0.3)" : "none",
-        boxShadow: !fullScreen
-          ? "0 10px 15px -3px rgba(236, 72, 153, 0.1)"
-          : "none",
+        borderRadius: "0.75rem",
+        border: "1px solid rgba(236, 72, 153, 0.3)",
+        boxShadow: "none",
         overflow: "hidden",
       }}
     >
@@ -126,11 +139,11 @@ export default function NoteEditor({ noteId }) {
         </div>
         <div className="flex gap-2">
           <button
-            onClick={() => setFullScreen(!fullScreen)}
+            onClick={toggleFullScreen}
             className="p-2 bg-white/20 hover:bg-white/30 rounded-lg text-white transition-colors"
             aria-label={fullScreen ? "Exit fullscreen" : "Enter fullscreen"}
           >
-            {fullScreen ? <FiMinimize2 size={20} /> : <FiMaximize2 size={20} />}
+            {fullScreen ? <IoContract size={20} /> : <IoExpand size={20} />}
           </button>
           <button
             onClick={saveScene}
@@ -141,10 +154,7 @@ export default function NoteEditor({ noteId }) {
           </button>
         </div>
       </div>
-      <div
-        className="flex-1"
-        style={{ height: fullScreen ? "calc(100vh - 64px)" : "100%" }}
-      >
+      <div className="flex-1" style={{ height: "100%" }}>
         {loading ? (
           <LoadingSpinner />
         ) : (

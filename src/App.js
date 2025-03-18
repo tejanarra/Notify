@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Navbar } from "./components/Navbar";
 import HomePage from "./pages/HomePage";
@@ -9,10 +9,17 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LandingPage from "./pages/LandingPage";
 
 export default function App() {
+  const location = useLocation();
+
+  // Check if the current route is '/notes/:noteId'
+  const isNotePage = location.pathname.startsWith("/notes/");
+
   return (
     <AuthProvider>
       <div className="min-h-screen bg-black flex flex-col">
-        <Navbar />
+        {/* Conditionally render the Navbar */}
+        {!isNotePage && <Navbar />}
+        
         <main className="flex-1 flex flex-col">
           <Routes>
             <Route path="/" element={<LandingPage />} />
