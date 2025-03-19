@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { get, ref, push, onValue, update, child } from "firebase/database";
 import { database, auth } from "../../firebase";
 import { MessageHeader } from "./MessageHeader";
@@ -45,7 +51,7 @@ export default function NoteChat({ noteId }) {
 
   const sendMessage = useCallback(async (text, imageUrl = "") => {
     if (!text.trim() && !imageUrl) return;
-    
+
     const messageData = {
       text,
       imageUrl,
@@ -79,23 +85,33 @@ export default function NoteChat({ noteId }) {
     }, {});
   }, [messages]);
 
-  const isReadByOthers = useCallback((msg) => {
-    if (!msg.readBy) return false;
-    const readers = Object.keys(msg.readBy).filter(uid => uid !== msg.sender);
-    return readers.length === Object.keys(members).length - 1;
-  }, [members]);
+  const isReadByOthers = useCallback(
+    (msg) => {
+      if (!msg.readBy) return false;
+      const readers = Object.keys(msg.readBy).filter(
+        (uid) => uid !== msg.sender
+      );
+      return readers.length === Object.keys(members).length - 1;
+    },
+    [members]
+  );
 
   return (
-    <div className={`flex flex-col h-full ${
-      fullScreen 
-        ? "fixed inset-0 z-50 bg-black" 
-        : "border border-pink-500/30 rounded-2xl w-full overflow-hidden shadow-lg shadow-pink-500/10"
-    }`}>
+    <div
+      className={`flex flex-col h-full ${
+        fullScreen
+          ? "fixed inset-0 z-50 bg-black"
+          : "border border-pink-500/30 rounded-2xl w-full overflow-hidden shadow-lg shadow-pink-500/10"
+      }`}
+    >
       <MessageHeader fullScreen={fullScreen} setFullScreen={setFullScreen} />
-      
-      <div 
+
+      <div
         className="flex-1 overflow-y-auto p-3 space-y-3 bg-black"
-        style={{ height: fullScreen ? "calc(100vh - 120px)" : "auto" }}
+        style={{
+          height: fullScreen ? "calc(100vh - 120px)" : "100%",
+          flexBasis: 0,
+        }}
         onClick={markMessagesAsRead}
       >
         <MessageList
